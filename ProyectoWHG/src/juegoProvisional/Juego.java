@@ -7,7 +7,7 @@ public class Juego extends JFrame {
     public Juego() {
         setTitle("Juego Básico");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600); // Ajusta el tamaño según tus preferencias
+        setSize(1920, 1080); // Ajusta el tamaño según tus preferencias
         setLocationRelativeTo(null); // Centra la ventana en la pantalla
 
         // Crea un nuevo panel de juego y agrégalo al marco

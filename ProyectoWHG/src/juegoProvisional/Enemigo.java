@@ -26,5 +26,9 @@ public class Enemigo {
     public void setEnemigoX(int enemigoX) {
         this.enemigoX = enemigoX;
     }
+
+    public void setDireccionMovimiento(int direccionMovimiento) {
+        this.direccionMovimiento = direccionMovimiento;
+    }
 }
 

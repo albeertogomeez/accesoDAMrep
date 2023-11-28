@@ -26,11 +26,15 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
     
     private List<Nivel> niveles;
     private int nivelActual;
-    private Image mapaImagen;
+    private Image mapaNivel1;
+    private Image mapaNivel2;
+    
+    private int puntoTransicionX = 1550; // Ajusta esta coordenada X según tus necesidades
+    private int puntoTransicionY = 680 ;  // Ajusta esta coordenada Y según tus necesidades
 
     private boolean haMuerto = false;
     private boolean enFadeout = false;
-    private int tiempoFadeout = 100; // Duración del fadeout en milisegundos (0.5 segundos)
+    private int tiempoFadeout = 100;
     private float transparenciaJugador = 1.0f; // Transparencia inicial del jugador
 
     private boolean izquierdaPresionada = false;
@@ -46,46 +50,93 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
         // Cargar las imágenes
         jugadorImagen = new ImageIcon("Player.png").getImage();
         enemigoImagen = new ImageIcon("Enemy.png").getImage();
-        llaveImagen = new ImageIcon("Key.png").getImage();
-        mapaImagen = new ImageIcon("Map.png").getImage();
+//        llaveImagen = new ImageIcon("Key.png").getImage();
+        mapaNivel1 = new ImageIcon("Level1.png").getImage();
+        mapaNivel2 = new ImageIcon("Level2.png").getImage();
 
         // Puedes iniciar un temporizador para manejar la actualización del juego
         Timer timer = new Timer(10, this);
         timer.start();
 
         enemigos = new ArrayList<>();
-        enemigos.add(new Enemigo(1300, 339, -7));
-        enemigos.add(new Enemigo(600, 432, 7));
-        enemigos.add(new Enemigo(1300, 525, -7));
-        enemigos.add(new Enemigo(600, 618, 7));
+        enemigos.add(new Enemigo(1300, 339, -0));
+        enemigos.add(new Enemigo(600, 432, 0));
+        enemigos.add(new Enemigo(1300, 525, -0));
+        enemigos.add(new Enemigo(600, 618, 0));
 
         niveles = new ArrayList<>();
-        niveles.add(new Nivel(200, 500, enemigos)); // Agregar al menos un nivel aquí
+        niveles.add(new Nivel(200, 500, enemigos, mapaNivel1)); // Agregar al menos un nivel aquí
+        niveles.add(new Nivel(200, 500, enemigos, mapaNivel2));
         nivelActual = 0; // Ajusta aquí el índice inicial
         cargarNivel(nivelActual);
     }
+    
+    public static class Enemigo {
+        private int enemigoX;
+        private int enemigoY;
+        private int direccionMovimiento;
+
+        public Enemigo(int enemigoX, int enemigoY, int direccionMovimiento) {
+            this.enemigoX = enemigoX;
+            this.enemigoY = enemigoY;
+            this.direccionMovimiento = direccionMovimiento;
+        }
+
+        public int getEnemigoX() {
+            return enemigoX;
+        }
+
+        public int getEnemigoY() {
+            return enemigoY;
+        }
+
+        public int getDireccionMovimiento() {
+            return direccionMovimiento;
+        }
+
+        public void setEnemigoX(int enemigoX) {
+            this.enemigoX = enemigoX;
+        }
+
+        public void setDireccionMovimiento(int direccionMovimiento) {
+            this.direccionMovimiento = direccionMovimiento;
+        }
+
+        // Agregar lógica para cambiar dirección cuando llega a cierto punto en X
+        public void verificarCambioDireccion() {
+            if (enemigoX <= 570 || enemigoX >= 1300 ) {
+                direccionMovimiento = -direccionMovimiento;
+            }
+        }
+    }
+
     
     private void cargarNivel(int nivel) {
         Nivel nivelActual = niveles.get(nivel);
 
         jugadorX = nivelActual.getJugadorX();
         jugadorY = nivelActual.getJugadorY();
-    }
-    private void avanzarNivel() {
-    	nivelActual++;
-    	if (nivelActual < niveles.size()) {
-    		cargarNivel(nivelActual);
-    	} else {
-    		JOptionPane.showInputDialog("Acabas de completar el juego!");
-    	}
-    }
+        enemigos = nivelActual.getEnemigos();
 
+        // Cargar la nueva imagen del mapa
+        mapaNivel1 = nivelActual.getMapaImagen();
+    }
+    
+    private void avanzarNivel() {
+        nivelActual++;
+        if (nivelActual < niveles.size()) {
+            cargarNivel(nivelActual);
+        } else {
+            JOptionPane.showInputDialog("Acabas de completar el juego!");
+        }
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         // Dibujar el mapa
-        g.drawImage(mapaImagen, 0, 0, this);
+        g.drawImage(mapaNivel1, 0, 0, this);
 
         // Dibujar al jugador con la transparencia actual
         Graphics2D g2d = (Graphics2D) g;
@@ -122,21 +173,32 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
 
         // Actualizar la posición del jugador solo si no está en animación de fadeout
         if (izquierdaPresionada) {
-            jugadorX -= 4;
+            jugadorX -= 6;
         }
         if (derechaPresionada) {
-            jugadorX += 4;
+            jugadorX += 6;
         }
         if (arribaPresionada) {
-            jugadorY -= 4;
+            jugadorY -= 6;
         }
         if (abajoPresionada) {
-            jugadorY += 4;
+            jugadorY += 6;
         }
         
         // Actualizar la posición de los enemigos
         for (Enemigo enemigo : enemigos) {
             enemigo.setEnemigoX(enemigo.getEnemigoX() + enemigo.getDireccionMovimiento());
+        }
+        
+        // Actualizar la posición de los enemigos y verificar cambio de dirección
+        for (Enemigo enemigo : enemigos) {
+            enemigo.setEnemigoX(enemigo.getEnemigoX() + enemigo.getDireccionMovimiento());
+            enemigo.verificarCambioDireccion();
+        }
+        
+        // Verificar si el jugador está en el punto de transición
+        if (jugadorX >= puntoTransicionX && jugadorY >= puntoTransicionY) {
+            avanzarNivel();
         }
 
         // Lógica para la recogida de la llave (puedes ajustar las coordenadas según tu diseño)
@@ -147,8 +209,8 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
 
         // Lógica para la colisión con el enemigo (puedes ajustar las coordenadas según tu diseño)
         for (Enemigo enemigo : enemigos) {
-            if (jugadorX < enemigo.getEnemigoX() + 55 && jugadorX + 55 > enemigo.getEnemigoX() &&
-                jugadorY < enemigo.getEnemigoY() + 55 && jugadorY + 55 > enemigo.getEnemigoY()) {
+            if (jugadorX < enemigo.getEnemigoX() + 50 && jugadorX + 50 > enemigo.getEnemigoX() &&
+                jugadorY < enemigo.getEnemigoY() + 50 && jugadorY + 50 > enemigo.getEnemigoY()) {
                 // Iniciar animación de fadeout solo si no está en curso
                 if (!enFadeout) {
                     iniciarAnimacionFadeout();
@@ -156,19 +218,36 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
             }
         }
         
-        // Verificar límites del mapa
-        if (jugadorX < 0) {
-            jugadorX = 0;
-        }
-        if (jugadorX > getWidth() - 30) { // Ajusta 30 según el ancho del jugador
-            jugadorX = getWidth() - 30;
-        }
-        if (jugadorY < 0) {
-            jugadorY = 0;
-        }
-        if (jugadorY > getHeight() - 30) { // Ajusta 30 según la altura del jugador
-            jugadorY = getHeight() - 30;
-        }
+        // Cuadrado principal
+        	// Bordes izquierda y derecha
+	        while (jugadorX < 157 && jugadorY >= 190) {
+	        	jugadorX = 157;
+	        } 
+	        while (jugadorX > 330 && jugadorX < 350 && jugadorY >= 190 && jugadorY < 692) {
+	        	jugadorX = 330;
+	        // Bordes arriba y abajo
+	        } 
+	        while (jugadorY <= 190 && jugadorX < 157 && jugadorX > 330) {
+	        	jugadorY = 200;
+	        }
+	        	
+	   // Cuadrado grande
+	        // Bordes izquierda y derecha
+//	        while (jugadorX < 535 && jugadorY >= 235) {
+//	        	jugadorX = 535;
+//	        }
+        
+        
+        
+//        if (jugadorX > getWidth() - 30) { // Ajusta 30 según el ancho del jugador
+//            jugadorX = getWidth() - 30;
+//        }
+//        if (jugadorY < 0) {
+//            jugadorY = 0;
+//        }
+//        if (jugadorY > getHeight() - 30) { // Ajusta 30 según la altura del jugador
+//            jugadorY = getHeight() - 30;
+//        }
     }
 
     
@@ -233,5 +312,8 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
     public void keyTyped(KeyEvent e) {
         // Puedes manejar eventos de teclado al escribir aquí
     }
+    
+
+
     
 }

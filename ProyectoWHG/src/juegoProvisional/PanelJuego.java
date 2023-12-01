@@ -60,9 +60,9 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
 
         enemigos = new ArrayList<>();
         enemigos.add(new Enemigo(1300, 339, -0));
-        enemigos.add(new Enemigo(600, 432, 0));
+        enemigos.add(new Enemigo(575, 432, 0));
         enemigos.add(new Enemigo(1300, 525, -0));
-        enemigos.add(new Enemigo(600, 618, 0));
+        enemigos.add(new Enemigo(575, 618, 0));
 
         niveles = new ArrayList<>();
         niveles.add(new Nivel(200, 500, enemigos, mapaNivel1)); // Agregar al menos un nivel aquí
@@ -208,28 +208,53 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
         }
 
         // Lógica para la colisión con el enemigo (puedes ajustar las coordenadas según tu diseño)
-        for (Enemigo enemigo : enemigos) {
-            if (jugadorX < enemigo.getEnemigoX() + 50 && jugadorX + 50 > enemigo.getEnemigoX() &&
-                jugadorY < enemigo.getEnemigoY() + 50 && jugadorY + 50 > enemigo.getEnemigoY()) {
-                // Iniciar animación de fadeout solo si no está en curso
-                if (!enFadeout) {
-                    iniciarAnimacionFadeout();
-                }
-            }
-        }
+//        for (Enemigo enemigo : enemigos) {
+//            if (jugadorX < enemigo.getEnemigoX() + 50 && jugadorX + 50 > enemigo.getEnemigoX() &&
+//                jugadorY < enemigo.getEnemigoY() + 50 && jugadorY + 50 > enemigo.getEnemigoY()) {
+//                // Iniciar animación de fadeout solo si no está en curso
+//                if (!enFadeout) {
+//                    iniciarAnimacionFadeout();
+//                }
+//            }
+//        }
         
         // Cuadrado principal
         	// Bordes izquierda y derecha
-	        while (jugadorX < 157 && jugadorY >= 190) {
-	        	jugadorX = 157;
-	        } 
-	        while (jugadorX > 330 && jugadorX < 350 && jugadorY >= 190 && jugadorY < 692) {
-	        	jugadorX = 330;
-	        // Bordes arriba y abajo
-	        } 
-	        while (jugadorY <= 190 && jugadorX < 157 && jugadorX > 330) {
-	        	jugadorY = 200;
+	        if (jugadorX < 157) {
+	            jugadorX = 157;
+	        } else if (jugadorX > 330 && jugadorX < 400 && jugadorY >= 190 && jugadorY < 692) {
+	            jugadorX = 330;
 	        }
+	
+	        // Bordes arriba y abajo
+	        if (jugadorY < 258 && jugadorX > 130 && jugadorX < 350) {
+	            jugadorY = 258;
+	        } else if (jugadorY > 729) {
+	            jugadorY = 729;
+	        }
+	     // Pasillo primero por abajo
+	        if (jugadorY <= 696 && jugadorX > 330 && jugadorX < 521) {
+	            jugadorY = 696;
+	        } else if (jugadorY > 729) {
+	            jugadorY = 729;
+	        } else if (jugadorX > 617 && jugadorY >= 696 && jugadorY <= 729) {
+	        	jugadorX = 617;
+	        }
+        // Pasillo grande con enemigos
+	        if (jugadorX < 540 && jugadorY < 450 && jugadorY > 697) {
+	        	jugadorX = 540;
+	        }
+        
+//	        while (jugadorX < 157 && jugadorY >= 190) {
+//	        	jugadorX = 157;
+//	        } 
+//	        while (jugadorX > 330 && jugadorX < 350 && jugadorY >= 190 && jugadorY < 692) {
+//	        	jugadorX = 330;
+//	        // Bordes arriba y abajo
+//	        } 
+//	        while (jugadorY >= 190 && jugadorX < 157 && jugadorX > 330) {
+//	        	jugadorY  = 200;
+//	        }
 	        	
 	   // Cuadrado grande
 	        // Bordes izquierda y derecha

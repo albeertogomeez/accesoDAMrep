@@ -5,7 +5,7 @@ import javax.swing.*;
 public class Juego extends JFrame {
 
     public Juego() {
-        setTitle("Juego Básico");
+        setTitle("The World's Hardest Game - Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1920, 1080); // Ajusta el tamaño según tus preferencias
         setLocationRelativeTo(null); // Centra la ventana en la pantalla

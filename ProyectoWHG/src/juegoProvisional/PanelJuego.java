@@ -225,14 +225,13 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
 	        } else if (jugadorX > 330 && jugadorX < 400 && jugadorY >= 190 && jugadorY < 692) {
 	            jugadorX = 330;
 	        }
-	
 	        // Bordes arriba y abajo
 	        if (jugadorY < 258 && jugadorX > 130 && jugadorX < 350) {
 	            jugadorY = 258;
 	        } else if (jugadorY > 729) {
 	            jugadorY = 729;
 	        }
-	     // Pasillo primero por abajo
+	        // Pasillo primero por abajo
 	        if (jugadorY <= 696 && jugadorX > 330 && jugadorX < 521) {
 	            jugadorY = 696;
 	        } else if (jugadorY > 729) {
@@ -240,39 +239,17 @@ public class PanelJuego extends JPanel implements ActionListener, KeyListener {
 	        } else if (jugadorX > 617 && jugadorY >= 696 && jugadorY <= 729) {
 	        	jugadorX = 617;
 	        }
-        // Pasillo grande con enemigos
-	        if (jugadorX < 540 && jugadorY < 450 && jugadorY > 697) {
-	        	jugadorX = 540;
+	        // Pasillo grande con enemigos
+	        if (jugadorX <= 530 && jugadorY < 450 && jugadorY > 729) {
+	        	jugadorX = 530;
+	        } else if (jugadorX > 1337 && jugadorY < 550) {
+	        	jugadorX = 1337;
+	        } else if (jugadorY < 324 && jugadorX >= 540 && jugadorX <= 1200) {
+	        	jugadorY = 324;
+	        } else if (jugadorY >= 636 && jugadorX > 630 && jugadorX < 1430) {
+	        	jugadorY = 636;
 	        }
-        
-//	        while (jugadorX < 157 && jugadorY >= 190) {
-//	        	jugadorX = 157;
-//	        } 
-//	        while (jugadorX > 330 && jugadorX < 350 && jugadorY >= 190 && jugadorY < 692) {
-//	        	jugadorX = 330;
-//	        // Bordes arriba y abajo
-//	        } 
-//	        while (jugadorY >= 190 && jugadorX < 157 && jugadorX > 330) {
-//	        	jugadorY  = 200;
-//	        }
-	        	
-	   // Cuadrado grande
-	        // Bordes izquierda y derecha
-//	        while (jugadorX < 535 && jugadorY >= 235) {
-//	        	jugadorX = 535;
-//	        }
-        
-        
-        
-//        if (jugadorX > getWidth() - 30) { // Ajusta 30 según el ancho del jugador
-//            jugadorX = getWidth() - 30;
-//        }
-//        if (jugadorY < 0) {
-//            jugadorY = 0;
-//        }
-//        if (jugadorY > getHeight() - 30) { // Ajusta 30 según la altura del jugador
-//            jugadorY = getHeight() - 30;
-//        }
+	        
     }
 
     
